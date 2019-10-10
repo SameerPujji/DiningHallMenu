@@ -51,7 +51,7 @@ app.get("/", function(req, res) {
         from: process.env.TWILIO_NUMBER,
         body: "There was an error getting the menu, please try again"
       });
-      res.send("Error");
+      res.send(err);
     });
 });
 
