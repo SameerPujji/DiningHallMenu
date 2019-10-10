@@ -1,10 +1,14 @@
 {
   "name": "dining-hall",
-  "version": "0.0.0",
-  "private": true,
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "author": "",
+  "license": "ISC",
   "dependencies": {
     "cheerio": "^1.0.0-rc.3",
     "cookie-parser": "~1.4.4",
