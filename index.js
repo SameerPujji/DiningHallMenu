@@ -18,7 +18,7 @@ app.set("view engine", "hbs");
 
 app.get("/", function(req, res) {
   puppeteer
-    .launch()
+    .launch({ args: ["--no-sandbox", "--disable-setuid-sandbox"] })
     .then(function(browser) {
       return browser.newPage();
     })
