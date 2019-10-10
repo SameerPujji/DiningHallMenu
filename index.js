@@ -21,14 +21,17 @@ app.get("/", function(req, res) {
   puppeteer
     .launch({ args: ["--no-sandbox", "--disable-setuid-sandbox"] })
     .then(function(browser) {
+      console.log("returning browser");
       return browser.newPage();
     })
     .then(function(page) {
       return page.goto(url).then(function() {
+        console.log("returning page");
         return page.content();
       });
     })
     .then(function(html) {
+      console.log("inside logic bit");
       let mealArray = [];
       let meal = $("#mealTypeBtn span", html).text();
 
@@ -47,12 +50,13 @@ app.get("/", function(req, res) {
       res.send("Success!");
     })
     .catch(function(err) {
+      console.log("Error with promise: ", err);
       client.messages.create({
         to: process.env.MY_NUMBER,
         from: process.env.TWILIO_NUMBER,
         body: "There was an error getting the menu, please try again"
       });
-      res.send(err);
+      res.send("error with request");
     });
 });
 
