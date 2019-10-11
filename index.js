@@ -11,8 +11,7 @@ var bodyParser = require("body-parser");
 app.engine(
   "hbs",
   exphbs({
-    extname: "hbs",
-    defaultLayout: "layout"
+    extname: "hbs"
   })
 );
 app.use(
@@ -70,6 +69,18 @@ app.post("/incoming", function(req, res) {
       body: "Invalid keyword, try again"
     });
   }
+});
+
+app.get("/", function(req, res) {
+  res.render("main");
+});
+
+app.get("/*", function(req, res) {
+  res.redirect("/");
+});
+
+app.post("/*", function(req, res) {
+  res.send("pls don't hack");
 });
 
 //================================================
