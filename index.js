@@ -23,10 +23,10 @@ app.use(
 app.set("view engine", "hbs");
 
 app.post("/incoming", function(req, res) {
-  let meal = req.body.Body;
+  let mealType = req.body.Body;
   let from = req.body.From;
 
-  if (meal.toLowerCase() === "get") {
+  if (mealType.toLowerCase() === "get") {
     puppeteer
       .launch({ args: ["--no-sandbox", "--disable-setuid-sandbox"] })
       .then(function(browser) {
