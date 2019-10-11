@@ -6,12 +6,18 @@ const $ = require("cheerio");
 const url = "https://wlu.campusdish.com/en/LocationsAndMenus/FreshFoodCompany";
 const twilio = require("twilio");
 const client = new twilio(process.env.TWILIO_KEY, process.env.TWILIO_AUTH);
+var bodyParser = require("body-parser");
 
 app.engine(
   "hbs",
   exphbs({
     extname: "hbs",
     defaultLayout: "layout"
+  })
+);
+app.use(
+  bodyParser.urlencoded({
+    extended: true
   })
 );
 app.set("view engine", "hbs");
@@ -53,6 +59,10 @@ app.get("/", function(req, res) {
       });
       res.send("error with request");
     });
+});
+
+app.post("/incoming", function(req, res) {
+  console.log(req.body);
 });
 
 //================================================
