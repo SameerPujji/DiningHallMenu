@@ -22,47 +22,54 @@ app.use(
 );
 app.set("view engine", "hbs");
 
-app.get("/", function(req, res) {
-  puppeteer
-    .launch({ args: ["--no-sandbox", "--disable-setuid-sandbox"] })
-    .then(function(browser) {
-      return browser.newPage();
-    })
-    .then(function(page) {
-      return page.goto(url).then(function() {
-        return page.content();
-      });
-    })
-    .then(function(html) {
-      let mealArray = [];
-      let meal = $("#mealTypeBtn span", html).text();
-
-      $(".menu__category a", html).each(function() {
-        mealArray.push($(this).text());
-      });
-      client.messages.create({
-        to: process.env.MY_NUMBER,
-        from: process.env.TWILIO_NUMBER,
-        body:
-          "Hello! Today's " +
-          meal.toLowerCase() +
-          " menu is: " +
-          mealArray.join(", ")
-      });
-      res.send("Success!");
-    })
-    .catch(function(err) {
-      client.messages.create({
-        to: process.env.MY_NUMBER,
-        from: process.env.TWILIO_NUMBER,
-        body: "There was an error getting the menu, please try again"
-      });
-      res.send("error with request");
-    });
-});
-
 app.post("/incoming", function(req, res) {
-  console.log(req.body);
+  let meal = req.body.Body;
+  let from = req.body.From;
+
+  if (meal.toLowerCase() === "get") {
+    puppeteer
+      .launch({ args: ["--no-sandbox", "--disable-setuid-sandbox"] })
+      .then(function(browser) {
+        return browser.newPage();
+      })
+      .then(function(page) {
+        return page.goto(url).then(function() {
+          return page.content();
+        });
+      })
+      .then(function(html) {
+        let mealArray = [];
+        let meal = $("#mealTypeBtn span", html).text();
+
+        $(".menu__category a", html).each(function() {
+          mealArray.push($(this).text());
+        });
+        client.messages.create({
+          to: from,
+          from: process.env.TWILIO_NUMBER,
+          body:
+            "Hello! Today's " +
+            meal.toLowerCase() +
+            " menu is: " +
+            mealArray.join(", ")
+        });
+        res.send("Success!");
+      })
+      .catch(function(err) {
+        client.messages.create({
+          to: from,
+          from: process.env.TWILIO_NUMBER,
+          body: "There was an error getting the menu, please try again"
+        });
+        res.send("error with request");
+      });
+  } else {
+    client.messages.create({
+      to: from,
+      from: process.env.TWILIO_NUMBER,
+      body: "Invalid keyword, try again"
+    });
+  }
 });
 
 //================================================
